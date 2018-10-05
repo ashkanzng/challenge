@@ -9,8 +9,9 @@ from conf import *
 
 class orderClass(object):
 
-	""" status    = 0 			     Default is 0 means None Taken,  1=> Is taken
-		googleApi = GoogleAPIkey     Import from conf file
+	""" 
+		status    = 0 			Default is 0 means None Taken,  1=> Is taken
+		googleApi = GoogleAPIkey     	Import from conf file
 	"""
 
 	def __init__(self):
@@ -22,7 +23,9 @@ class orderClass(object):
 		self.status = 0 
 		self.googleApi = GoogleAPIkey 
 
-	""" Method getDistance from google api """
+	""" 
+		Method getDistance from google api 
+	"""
 	def getDistance(self):
 		URL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial"
 		googleLatLon = {
@@ -37,14 +40,18 @@ class orderClass(object):
 			out = 0
 		return str(out)
 
-	""" validatePrametr Check valid number for lat and long ;param str """
+	"""
+		validatePrametr Check valid number for lat and long ;param str 
+	"""
 	def validatePrametr(self,param):
 		number = re.search('^(?=.?\d)\d*[.,]?\d*$', param, re.IGNORECASE)
 		if number is None:
 			raise ValueError('number required (string given)' + param)
 		return param
 
-	""" Method set class entity  ;parametr dic """
+	""" 
+		Method set class entity  ;parametr dic 
+	"""
 	def setParametr(self,parametr):
 		errorCheck={"status":True,"message":"prametr passed :)"}
 		try:
@@ -58,14 +65,16 @@ class orderClass(object):
 
 
 
-
-
-	""" Method createOrder """
+	""" 
+		Method createOrder 
+	"""
 	def createOrder(self):
 		out = self.insertOrder()
 		return out
 
-	""" Method getOrder with offset and limit ;page int, limit int"""
+	""" 
+		Method getOrder with offset and limit ;page int, limit int
+	"""
 	def getOrder(self,page,limit):
 		offset = 0
 		if int(page) > 1:
@@ -73,7 +82,9 @@ class orderClass(object):
 		out = self.selectOrders(offset,limit)
 		return out
 
-	""" Method getOrder with offset and limit ;orderid int"""
+	""" 
+		Method getOrder with offset and limit ;orderid int
+	"""
 	def pickOrder(self,orderid):
 		findOrder = self.findOrders(orderid)
 		if findOrder:
@@ -84,7 +95,9 @@ class orderClass(object):
 			
 
 
-	""" Method insert Order that insert row in mysql """
+	""" 
+		Method insert Order that insert row in mysql 
+	"""
 	def insertOrder(self):
 		output={"id":None,"distance":None,"status":"UNASSIGN"}
 		distance = self.getDistance()
@@ -104,7 +117,9 @@ class orderClass(object):
 		cursor.close()
 		return output
 
-	""" Method select Order from mysql """
+	""" 
+		Method select Order from mysql 
+	"""
 	def selectOrders(self,offset,limit): 
 		output=[]
 		cursor = self.connection.cursor()
@@ -116,7 +131,9 @@ class orderClass(object):
 			output.append({"id":row[0],"distance":row[1],"status":row[2]})
 		return output
 
-	""" Method find Order from mysql by id """
+	""" 
+		Method find Order from mysql by id 
+	"""
 	def findOrders(self,orderid): 
 		cursor = self.connection.cursor()
 		query = (""" SELECT id,status FROM order_requests WHERE id = %s  """)
@@ -126,7 +143,9 @@ class orderClass(object):
 		return row
 		
 
-	""" Method update Order in mysql """
+	""" 
+		Method update Order in mysql 
+	"""
 	def updateOrder(self,orderid):
 		cursor = self.connection.cursor()
 		query = ("""UPDATE order_requests SET `status`= 1 WHERE id = %s """)
@@ -135,7 +154,9 @@ class orderClass(object):
 		cursor.close()
 		return {"status": "SUCCESS"}
 
-	""" Method Close connection to database """
+	""" 
+		Method Close connection to database 
+	"""
 	def CloseConnectionDatabase(self):
 		self.connection.close()
 
